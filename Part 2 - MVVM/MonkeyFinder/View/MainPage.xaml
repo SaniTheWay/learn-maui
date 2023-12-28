@@ -3,43 +3,66 @@
     x:Class="MonkeyFinder.View.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:model="clr-namespace:MonkeyFinder.Model">
+    xmlns:model="clr-namespace:MonkeyFinder.Model"
+    xmlns:viewModel="clr-namespace:MonkeyFinder.ViewModel"
+    x:DataType="viewModel:MonkeysViewModel"
+    Title="{Binding Title}">
+    <!--Grid (*,*)=50-50-->
+    <Grid ColumnDefinitions="*,*"
+          RowDefinitions="*,Auto">
 
-    <CollectionView>
-        <CollectionView.ItemsSource>
-            <x:Array Type="{x:Type model:Monkey}">
-               <model:Monkey
-                    Name="Baboon"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/baboon.jpg"
-                    Location="Africa and Asia" />
-                <model:Monkey
-                    Name="Capuchin Monkey"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/capuchin.jpg"
-                    Location="Central and South America" />
-                <model:Monkey
-                    Name="Red-shanked douc"
-                    Image="https://raw.githubusercontent.com/jamesmontemagno/app-monkeys/master/douc.jpg"
-                    Location="Vietnam" />
-            </x:Array>
-        </CollectionView.ItemsSource>
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Monkey">
-                <HorizontalStackLayout Padding="10">
-                    <Image
-                        Aspect="AspectFill"
-                        HeightRequest="100"
-                        Source="{Binding Image}"
-                        WidthRequest="100" />
-                    <Label VerticalOptions="Center">
-                        <Label.Text>
-                            <MultiBinding StringFormat="{}{0} | {1}">
-                                <Binding Path="Name" />
-                                <Binding Path="Location" />
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </HorizontalStackLayout>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+        <CollectionView Background="#1F1B24"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="1"
+                        ItemsSource="{Binding Monkeys}"
+                        SelectionMode="None"
+                        >
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Monkey">
+                    <Grid Padding="10">
+                        <Frame HeightRequest="125" BackgroundColor="PapayaWhip">
+                            <Grid Padding="10" ColumnDefinitions="125,*">
+                                <Image Aspect="AspectFill" 
+                                       HorizontalOptions="Center"
+                                       Source="{Binding Image}" 
+                                       WidthRequest="125" 
+                                       HeightRequest="125"
+                                       />
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Padding="10"
+                                                     VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       Style="{StaticResource LargeLabel}"
+                                       TextColor="Black"/>
+                                <Label Text="{Binding Location}"
+                                       Style="{StaticResource SmallLabel}"
+                                       TextColor="Tomato"/>
+                                    
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Button Text="Get Monkeys"
+                Command="{Binding GetMonkeysCommand}"
+                Grid.Row="1"
+                BorderColor="Black"
+                Margin="8"
+                TextColor="Purple"
+                BorderWidth="1.4"
+                Style="{StaticResource ButtonOutline}"
+                />
+
+        <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                          HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           Grid.ColumnSpan="2"
+                           Grid.RowSpan="1"></ActivityIndicator>
+    </Grid>
+
 </ContentPage>
